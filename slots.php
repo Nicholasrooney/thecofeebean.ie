@@ -12,6 +12,7 @@ require_once __DIR__ . '/includes/hours.php';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/bookings.php';
 require_once __DIR__ . '/includes/capacity.php';
+require_once __DIR__ . '/includes/booking-picker.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -36,47 +37,21 @@ if ($parsed < $today || $parsed > $lastDay) {
     exit;
 }
 
-// Closed that day, or not taking any more? Say which, and point at the next
-// date we can actually take one.
+$now    = new DateTimeImmutable('now', $tz);
+$wanted = (string) ($_GET['time'] ?? '');
+if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $wanted)) {
+    $wanted = (string) ($booking['usual_time'] ?? '11:00');
+}
+
+// Every slot that exists that day, and which of them are still free. The
+// picker uses the suggestions; the time dropdown uses the full list.
 $daySlots = hours_slots_for_date($date);
-$blocked  = hours_blocked_message($date);
-
-if (!$daySlots || $blocked !== null) {
-    echo json_encode([
-        'date'      => $date,
-        'closed'    => true,
-        'slots'     => [],
-        'message'   => $blocked ?? 'We are closed that day.',
-        'next_open' => hours_next_open_date($date),
-    ]);
-    exit;
-}
-
-try {
-    $available = capacity_slot_availability(
-        $date,
-        $daySlots,
-        (int) ($booking['max_bookings_per_hour'] ?? 0),
-        $guests
-    );
-} catch (Throwable $e) {
-    // No database yet — don't block anybody from booking.
-    $available = array_fill_keys($daySlots, true);
-}
-
-// Past times today are no use to anyone either.
-if ($date === $today->format('Y-m-d')) {
-    $now = (new DateTimeImmutable('now', $tz))->format('H:i');
-    foreach ($available as $time => $free) {
-        if ($time <= $now) {
-            $available[$time] = false;
-        }
-    }
-}
+$free     = picker_free_times($date, $guests, $now);
 
 echo json_encode([
     'date'   => $date,
     'guests' => $guests,
-    'closed' => false,
-    'slots'  => $available,
+    'closed' => !$daySlots || hours_blocked_message($date) !== null,
+    'slots'  => array_combine($daySlots, array_map(fn($t) => in_array($t, $free, true), $daySlots)) ?: new stdClass(),
+    'search' => picker_search($date, $wanted, $guests, $now),
 ]);

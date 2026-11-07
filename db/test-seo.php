@@ -17,6 +17,8 @@ $GLOBALS['booking']['service_hours'] = [
     'thu' => ['07:00', '17:00'], 'fri' => ['07:00', '17:00'], 'sat' => ['08:00', '17:00'],
     'sun' => null,
 ];
+$GLOBALS['booking']['slot_minutes'] = 30;
+$GLOBALS['booking']['last_booking_before_close'] = 60;
 $GLOBALS['booking']['times'] = hours_all_slots($GLOBALS['booking']['service_hours']);
 $GLOBALS['site']['address']  = '64 Mary Street, Dublin 1';
 

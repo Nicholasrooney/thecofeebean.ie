@@ -40,7 +40,20 @@ unset($_SESSION['booking_confirmed']);
 $today   = new DateTimeImmutable('today', new DateTimeZone('Europe/Dublin'));
 $lastDay = $today->modify('+' . (int) $booking['days_ahead'] . ' days');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// The picker's own buttons post here too when JavaScript is off: "pick" is a
+// chosen time (date|time), "search" is just "show me times for this". Neither
+// is a booking yet, so nothing is validated — we just open the details step.
+$picked = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['pick']) || isset($_POST['search']))
+    && trim((string) ($_POST['phone'] ?? '')) === '') {
+    $old['guests'] = (string) max(1, min((int) ($_POST['guests'] ?? 2), (int) $booking['max_guests']));
+    $old['date']   = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) ($_POST['date'] ?? '')) ? (string) $_POST['date'] : '';
+    $old['time']   = preg_match('/^\d{2}:\d{2}$/', (string) ($_POST['time'] ?? '')) ? (string) $_POST['time'] : '';
+    if (isset($_POST['pick']) && preg_match('/^(\d{4}-\d{2}-\d{2})\|(\d{2}:\d{2})$/', (string) $_POST['pick'], $m)) {
+        [$old['date'], $old['time']] = [$m[1], $m[2]];
+        $picked = true;
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($old as $field => $default) {
         $old[$field] = trim((string) ($_POST[$field] ?? ''));
     }
@@ -126,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!mail_booking_alert($row)) {
             error_log('Booking request email failed for ' . $old['date'] . ' ' . $old['time']);
-            $errors['form'] = 'Your request could not be sent. Please message us on Instagram instead.';
+            $errors['form'] = 'Your request could not be sent. Please ring us on ' . ($site['phone'] ?: 'the café phone') . ' instead.';
         } else {
             mail_booking_confirmation($row);
         }

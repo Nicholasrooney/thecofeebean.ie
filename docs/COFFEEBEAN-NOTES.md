@@ -65,7 +65,7 @@ through git: `includes/secrets/db.php` is uploaded by hand in File Manager.
 
 ## Tests
 
-    php db/test.php && php db/test-seo.php && php db/test-setup.php
+    php db/test.php && php db/test-seo.php && php db/test-setup.php && php db/test-picker.php
 
 Source photos, videos and screenshots are in `Extras/` (gitignored).
 `event-catering.php` is still the Cilantro catering page underneath; it answers

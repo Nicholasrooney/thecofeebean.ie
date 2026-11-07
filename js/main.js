@@ -224,73 +224,139 @@ function cookieChoice(set) {
   });
 })();
 
-// Booking form: refresh the time slots when the date or party size changes, so
-// a full sitting is greyed out before somebody fills in the whole form and gets
-// turned away at the end.
+// Booking picker (OpenTable style). Party size, date and a rough time in;
+// a few real free times out as buttons. Picking one opens the short details
+// step (name, phone, email). The server does the thinking (slots.php), so the
+// buttons always match what the booking form will accept.
 (function () {
-  var form = document.querySelector('.booking-form');
+  var form = document.querySelector('.picker');
   if (!form) return;
 
-  var date   = form.querySelector('#date');
-  var time   = form.querySelector('#time');
-  var guests = form.querySelector('#guests');
-  if (!date || !time) return;
+  var guests  = form.querySelector('#guests');
+  var date    = form.querySelector('#date');
+  var time    = form.querySelector('#time');
+  var results = form.querySelector('.picker-results');
+  var summary = form.querySelector('.js-summary');
+  var details = form.querySelector('#picker-details');
+  if (!guests || !date || !time || !results) return;
 
+  form.classList.add('js');
   var inFlight = null;
+  var nextSlots = {};   // date -> every slot that day, for jumping to "next available"
 
-  function refresh() {
-    if (!date.value) return;
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
 
+  function setTimeOptions(slots, wanted) {
+    if (!slots || !slots.length) return;
+    var keep = wanted || time.value;
+    while (time.options.length) time.remove(0);
+    var toMin = function (t) { return +t.slice(0, 2) * 60 + +t.slice(3, 5); };
+    var best = slots[0];
+    slots.forEach(function (t) {
+      var o = el('option', null, t); o.value = t; time.appendChild(o);
+      if (Math.abs(toMin(t) - toMin(keep)) < Math.abs(toMin(best) - toMin(keep))) best = t;
+    });
+    time.value = slots.indexOf(keep) > -1 ? keep : best;
+  }
+
+  function buttons(d, times) {
+    var grid = el('div', 'slot-grid');
+    times.forEach(function (t) {
+      var b = el('button', 'slot-btn', t);
+      b.type = 'button'; b.dataset.date = d; b.dataset.time = t;
+      grid.appendChild(b);
+    });
+    return grid;
+  }
+
+  function render(search) {
+    results.innerHTML = '';
+    if (search.message) {
+      var m = el('p', 'picker-message');
+      m.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7v6M12 16.5v.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>';
+      m.appendChild(el('span', null, search.message));
+      results.appendChild(m);
+    }
+    if (search.suggestions && search.suggestions.length) {
+      results.appendChild(el('p', 'picker-label', 'Select a time'));
+      results.appendChild(buttons(search.date, search.suggestions));
+    } else if (search.next) {
+      nextSlots[search.next.date] = search.next.slots;
+      var l = el('p', 'picker-label', 'Next available is ');
+      l.appendChild(el('strong', null, search.next.label));
+      results.appendChild(l);
+      results.appendChild(buttons(search.next.date, search.next.suggestions));
+    }
+  }
+
+  function refresh(dateChanged) {
     var url = 'slots.php?date=' + encodeURIComponent(date.value) +
-              '&guests=' + encodeURIComponent(guests ? guests.value : 1);
-
+              '&guests=' + encodeURIComponent(guests.value) +
+              '&time=' + encodeURIComponent(time.value);
     if (inFlight) inFlight.abort();
     inFlight = new AbortController();
-
+    results.classList.add('is-loading');
     fetch(url, { signal: inFlight.signal })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
+        results.classList.remove('is-loading');
         if (!data) return;
-
-        var note = document.getElementById('slot-note');
-        var chosen = time.value;
-
-        // Rebuild the list: opening hours differ by day and the cafe is shut
-        // on Mondays, so the times themselves change, not just their state.
-        while (time.options.length > 1) time.remove(1);
-
-        if (data.closed) {
-          time.value = '';
-          if (note) {
-            note.textContent = data.message || 'We are closed that day.';
-            note.hidden = false;
-          }
-          return;
+        if (dateChanged && data.slots) {
+          setTimeOptions(Object.keys(data.slots), time.value);
+          if (data.search && data.search.wanted !== time.value) { refresh(false); return; }
         }
-
-        if (note) note.hidden = true;
-
-        Object.keys(data.slots).forEach(function (t) {
-          var free = data.slots[t];
-          var opt = document.createElement('option');
-          opt.value = t;
-          opt.textContent = t + (free ? '' : ' — fully booked');
-          opt.disabled = !free;
-          if (t === chosen) opt.selected = true;
-          time.appendChild(opt);
-        });
-
-        // If their chosen time is gone or now full, clear it rather than
-        // submitting something that will be rejected.
-        if (chosen && (!time.value || (time.selectedOptions[0] && time.selectedOptions[0].disabled))) {
-          time.value = '';
-        }
+        render(data.search);
       })
-      .catch(function () { /* offline or aborted: leave the form as it is */ });
+      .catch(function () { results.classList.remove('is-loading'); });
   }
 
-  date.addEventListener('change', refresh);
-  if (guests) guests.addEventListener('change', refresh);
+  function updateSummary() {
+    if (!summary) return;
+    var g = guests.options[guests.selectedIndex].text;
+    var d = date.options[date.selectedIndex].text;
+    summary.textContent = g + ' · ' + d + ' · ' + time.value;
+  }
+
+  guests.addEventListener('change', function () { refresh(false); });
+  time.addEventListener('change', function () { refresh(false); });
+  date.addEventListener('change', function () { refresh(true); });
+
+  results.addEventListener('click', function (e) {
+    var b = e.target.closest('.slot-btn');
+    if (!b) return;
+    e.preventDefault();
+    if (b.dataset.date !== date.value) {
+      date.value = b.dataset.date;
+      if (nextSlots[b.dataset.date]) setTimeOptions(nextSlots[b.dataset.date], b.dataset.time);
+    }
+    if (Array.prototype.some.call(time.options, function (o) { return o.value === b.dataset.time; })) {
+      time.value = b.dataset.time;
+    }
+    Array.prototype.forEach.call(results.querySelectorAll('.slot-btn'), function (x) {
+      x.classList.toggle('is-picked', x === b);
+      x.setAttribute('aria-pressed', String(x === b));
+    });
+    updateSummary();
+    form.classList.add('has-details');
+    if (details) {
+      details.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      var first = details.querySelector('#name');
+      if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 350);
+    }
+    if (window.coffeebeanAnalytics) window.coffeebeanAnalytics.track('booking_time_picked', { time: b.dataset.time, guests: guests.value });
+  });
+
+  var change = form.querySelector('.js-change');
+  if (change) change.addEventListener('click', function (e) {
+    e.preventDefault();
+    form.classList.remove('has-details');
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 })();
 
 // Analytics: what people actually do on the site.

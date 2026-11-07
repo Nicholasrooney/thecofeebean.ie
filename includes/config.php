@@ -61,8 +61,20 @@ $booking = [
         'sun' => ['09:00', '17:00'],
     ],
 
-    // How often a slot comes round, in minutes.
-    'slot_minutes' => 30,
+    // How often a slot comes round, in minutes. 15 gives the 12:00 / 12:15 /
+    // 12:30 buttons on the booking picker.
+    'slot_minutes' => 15,
+
+    // The booking picker (booking.php) opens on this many people at this time,
+    // today — or the next open day once today is effectively over.
+    'default_guests'        => 2,
+    'usual_time'            => '11:00',
+    // No same-day booking sooner than this many minutes from now.
+    'same_day_lead_minutes' => 30,
+    // Offer free times within this many minutes either side of the time asked
+    // for, and at most this many buttons.
+    'picker_window_minutes' => 150,
+    'picker_suggestions'    => 5,
 
     // The last booking is this many minutes before closing, so nobody books a
     // table for five minutes before the doors shut. The café closes at 17:00,

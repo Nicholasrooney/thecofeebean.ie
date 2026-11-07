@@ -1328,3 +1328,125 @@ a:hover { color: var(--signage-deep); }
   .site-nav a[href="home-video.php"] { font-size: 1rem; }
 }
 .hero-video-bg .rating-chip, .hero-video-bg .hero-actions { align-self: flex-start; }
+
+/* ---------- Booking picker (OpenTable style) ---------- */
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.picker-card {
+  background: var(--white);
+  border: 1px solid #e3e5e8;
+  border-radius: 8px;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  box-shadow: 0 10px 30px -18px rgba(29, 34, 37, 0.35);
+}
+.picker-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1.3rem;
+  text-align: center;
+  margin: 0 0 1.25rem;
+}
+.picker-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f1f2f4;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+.picker-field:focus-within { box-shadow: 0 0 0 2px var(--signage); }
+.picker-icon {
+  position: absolute;
+  left: 0.95rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.7;
+  pointer-events: none;
+}
+.picker-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  border: 0;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='%23241f1d' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 0.85rem center / 1.1rem;
+  font: 500 1.05rem/1.2 var(--sans);
+  color: var(--ink);
+  padding: 1.05rem 2.4rem 1.05rem 3.1rem;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.picker-field select:focus { outline: none; }
+.picker-field select[aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--error); }
+.picker-row { display: grid; grid-template-columns: 1.25fr 1fr; gap: 0.6rem; }
+.picker-results { margin-top: 0.75rem; transition: opacity 0.15s; }
+.picker-results.is-loading { opacity: 0.45; }
+.picker-message {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  background: #f1f2f4;
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  font-size: 0.97rem;
+  margin: 0 0 1.1rem;
+  max-width: none;
+}
+.picker-message svg { flex: 0 0 1.2rem; width: 1.2rem; height: 1.2rem; fill: var(--ink); margin-top: 0.1rem; }
+.picker-label { font-size: 1.05rem; margin: 0 0 0.65rem; }
+.slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+@media (max-width: 380px) { .slot-grid { grid-template-columns: repeat(3, 1fr); } }
+.slot-btn {
+  font: 700 1rem/1 var(--sans);
+  color: var(--white);
+  background: var(--signage);
+  border: 0;
+  border-radius: 6px;
+  padding: 0.9rem 0.25rem;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.slot-btn:hover { background: var(--signage-deep); }
+.slot-btn:active { transform: scale(0.97); }
+.slot-btn.is-picked { background: var(--fascia); box-shadow: 0 0 0 3px var(--leaf), 0 0 0 5px var(--fascia); }
+.picker-foot { font-size: 0.9rem; color: var(--muted); margin: 1.25rem 0 0; max-width: none; }
+.picker-search { margin-top: 0.5rem; }
+
+.picker-details {
+  margin-top: 1.25rem;
+  background: var(--white);
+  border: 1px solid #e3e5e8;
+  border-radius: 8px;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  scroll-margin-top: 1rem;
+}
+.picker.js:not(.has-details) .picker-details { display: none; }
+.picker.js.has-details .picker-details { animation: picker-in 0.25s ease-out; }
+@keyframes picker-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .picker.js.has-details .picker-details { animation: none; } }
+.picker-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background: var(--wall);
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.25rem;
+}
+.picker-summary p { margin: 0; }
+.picker-extras { margin: 0.25rem 0 1.25rem; }
+.picker-extras summary { cursor: pointer; font-weight: 600; color: var(--signage); margin-bottom: 0.75rem; }
+.picker-extras .optional { color: var(--muted); font-weight: 400; }
+@media (max-width: 480px) {
+  .picker-row { grid-template-columns: 1fr; gap: 0; }
+}
+.picker .consent-label { display: flex; gap: 0.6rem; align-items: flex-start; font-weight: 400; font-size: 0.95rem; }
+.picker .consent-label input { margin-top: 0.2rem; width: 1.1rem; height: 1.1rem; flex: 0 0 auto; }
+/* On a phone the picker comes first: that is what people came for. */
+@media (max-width: 899px) {
+  .booking-layout .booking-main { order: -1; }
+}
