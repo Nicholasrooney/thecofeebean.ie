@@ -1,9 +1,17 @@
 <?php
-$pageTitle       = 'The Coffee Bean | Breakfast, Brunch & Coffee on Mary Street, Dublin 1';
+/*
+ * The home page. Two versions share this file:
+ *   index.php       -> photo at the top (the live home page)
+ *   home-video.php  -> the kitchen film playing behind the headline, for
+ *                      showing the café the alternative. It sets $heroStyle
+ *                      to 'video' and includes this file.
+ */
+$heroStyle       = $heroStyle ?? 'photo';
+$pageTitle       = $pageTitle ?? 'The Coffee Bean | Breakfast, Brunch & Coffee on Mary Street, Dublin 1';
 $pageDescription = 'The Coffee Bean, 64 Mary Street, Dublin 1. Breakfast and brunch seven days a week, signature sandwiches and wraps, fresh pastries and organic Fairtrade coffee. Gluten free, vegetarian and vegan friendly.';
 $pageKeywords    = 'breakfast Dublin 1, brunch Mary Street Dublin, café Dublin city centre, coffee near Henry Street, vegan breakfast Dublin, The Coffee Bean Dublin';
-$activePage      = 'home';
-$pagePreload     = ['images/hero-poster.webp'];
+$activePage      = $activePage ?? 'home';
+$pagePreload     = $heroStyle === 'video' ? ['images/kitchen-poster.webp'] : ['images/storefront-terrace.webp'];
 
 // Every answer here is true of the café: it comes from the Google listing or
 // the café's own menu board. A wrong answer in a rich result is worse than none.
@@ -53,16 +61,23 @@ $strip = [
 $hasOrdering = !empty($ordering['enabled']) && !empty($ordering['url']);
 ?>
 
-<section class="hero hero-video-split">
+<?php if ($heroStyle === 'video'): ?>
+<section class="hero hero-video-bg">
     <div class="hero-media">
         <video class="hero-video js-lazy-video" muted playsinline loop preload="none"
-               poster="images/hero-poster.webp" data-src="video/hero.mp4" data-autoplay="eager"
-               width="540" height="960" aria-label="Short film: coffee being made and lemon meringue tarts at The Coffee Bean"></video>
+               poster="images/kitchen-poster.webp" data-src="video/kitchen.mp4" data-autoplay="eager"
+               width="540" height="960" aria-label="Short film: avocado toast with poached eggs being made in the kitchen at The Coffee Bean"></video>
         <button type="button" class="video-toggle" aria-pressed="false" hidden>
             <span class="video-toggle-pause">Pause video</span>
             <span class="video-toggle-play">Play video</span>
         </button>
     </div>
+<?php else: ?>
+<section class="hero hero-photo-split">
+    <div class="hero-photo">
+        <?= photo('storefront-terrace', 'The Coffee Bean on Mary Street: a red awning over a busy covered terrace', '(min-width: 900px) 50vw, 100vw', 'width="961" height="1043" fetchpriority="high" decoding="async"') ?>
+    </div>
+<?php endif; ?>
     <div class="hero-text">
         <p class="hero-eyebrow">64 Mary Street · Dublin 1</p>
         <h1>Breakfast, brunch &amp; proper coffee<span class="hero-h1-aside">seven days a week</span></h1>
@@ -108,7 +123,7 @@ $hasOrdering = !empty($ordering['enabled']) && !empty($ordering['url']);
 
 <section class="section inside">
     <div class="container inside-grid">
-        <?= photo('storefront-terrace', 'The Coffee Bean on Mary Street: a red awning over a busy covered terrace', '(min-width: 900px) 45vw, 100vw', 'class="inside-photo" width="961" height="1043" loading="lazy" decoding="async"') ?>
+        <?= photo('coffee-bar', 'Behind the coffee bar at The Coffee Bean, with hanging plants and pendant lights', '(min-width: 900px) 45vw, 100vw', 'class="inside-photo" width="937" height="1033" loading="lazy" decoding="async"') ?>
         <div class="inside-text">
             <p class="script-kicker">small room, big menu</p>
             <h2>Your table under the red awning</h2>
@@ -145,9 +160,15 @@ $hasOrdering = !empty($ordering['enabled']) && !empty($ordering['url']);
 <section class="section kitchen">
     <div class="container kitchen-grid">
         <div class="kitchen-media">
-            <video class="kitchen-video js-lazy-video" muted playsinline loop preload="none"
-                   poster="images/kitchen-poster.webp" data-src="video/kitchen.mp4"
-                   width="540" height="960" aria-label="Short film: avocado toast with poached eggs being made in the kitchen"></video>
+            <?php if ($heroStyle === 'video'): ?>
+                <video class="kitchen-video js-lazy-video" muted playsinline loop preload="none"
+                       poster="images/hero-poster.webp" data-src="video/hero.mp4"
+                       width="540" height="960" aria-label="Short film: coffee being made and lemon meringue tarts at The Coffee Bean"></video>
+            <?php else: ?>
+                <video class="kitchen-video js-lazy-video" muted playsinline loop preload="none"
+                       poster="images/kitchen-poster.webp" data-src="video/kitchen.mp4"
+                       width="540" height="960" aria-label="Short film: avocado toast with poached eggs being made in the kitchen"></video>
+            <?php endif; ?>
         </div>
         <div class="kitchen-text">
             <p class="script-kicker">made to order</p>

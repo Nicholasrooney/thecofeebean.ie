@@ -31,6 +31,11 @@ $site = [
     // the prices sent to Google all follow this one switch.
     'show_prices' => false,
 
+    // Show "Home with Video" in the menu: the home page with the kitchen film
+    // behind the headline, so the café can compare it with the photo version.
+    // Set to false once they have picked one.
+    'show_video_home' => true,
+
     // Opening hours are NOT set here. They come from $booking['service_hours']
     // below, so the hours shown on the site, the hours Google is told, and the
     // times the booking form offers can never disagree with each other.

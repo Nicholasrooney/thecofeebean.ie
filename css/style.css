@@ -1274,3 +1274,57 @@ a:hover { color: var(--signage-deep); }
 @media (prefers-reduced-motion: reduce) {
   .hero-video-split .hero-media { transform: none; }
 }
+
+/* ---------- Home: photo version (index.php) ----------
+   Photo on the right half, text on the left. Half the width keeps the
+   ~1000px photo sharp on a big screen. */
+.hero-photo-split .hero-photo img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: 50% 45%;
+}
+@media (min-width: 900px) {
+  .hero-photo-split { min-height: min(84vh, 760px); }
+  .hero-photo-split .hero-photo { order: 2; position: relative; }
+  .hero-photo-split .hero-photo img { position: absolute; inset: 0; height: 100%; aspect-ratio: auto; }
+  .hero-photo-split .hero-text { order: 1; }
+}
+
+/* ---------- Home: video version (home-video.php) ----------
+   The kitchen film fills the whole header behind the text. */
+.hero-video-bg { position: relative; display: block; overflow: hidden; min-height: min(88svh, 820px); }
+.hero-video-bg .hero-media { position: absolute; inset: 0; }
+.hero-video-bg .hero-video { background-image: url("../images/kitchen-poster.webp"); }
+.hero-video-bg .hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(29, 34, 37, 0.25) 0%, rgba(29, 34, 37, 0.55) 30%, rgba(29, 34, 37, 0.9) 60%, rgba(29, 34, 37, 0.96) 100%);
+}
+.hero-video-bg .hero-text {
+  position: relative;
+  z-index: 1;
+  min-height: min(88svh, 820px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+.hero-video-bg .video-toggle { top: 0.85rem; bottom: auto; }
+@media (min-width: 900px) {
+  .hero-video-bg .hero-media::after {
+    background: linear-gradient(90deg, rgba(29, 34, 37, 0.92) 0%, rgba(29, 34, 37, 0.75) 38%, rgba(29, 34, 37, 0.25) 75%, rgba(29, 34, 37, 0.1) 100%);
+  }
+  .hero-video-bg .hero-text {
+    justify-content: center;
+    max-width: calc(var(--wrap) * 0.6 + (100vw - var(--wrap)) / 2);
+    padding-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
+  }
+  .hero-video-bg .video-toggle { top: auto; bottom: 1.25rem; right: 1.25rem; }
+}
+@media (max-width: 760px) {
+  .site-nav a[href="home-video.php"] { font-size: 1rem; }
+}
+.hero-video-bg .rating-chip, .hero-video-bg .hero-actions { align-self: flex-start; }

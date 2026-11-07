@@ -12,6 +12,7 @@ $pagePreload     = $pagePreload     ?? [];
 
 $nav = [
     'home'     => ['Home', 'index.php'],
+    'home-video' => ['Home with Video', 'home-video.php'],
     'menu'     => ['Menu', 'menu.php'],
     'gallery'  => ['Gallery', 'gallery.php'],
     'catering' => ['Event Catering', 'event-catering.php'],
@@ -20,6 +21,9 @@ $nav = [
 ];
 
 // Switched off in config, so they leave the menu too.
+if (empty($site['show_video_home'])) {
+    unset($nav['home-video']);
+}
 if (empty($catering['enabled'])) {
     unset($nav['catering']);
 }
