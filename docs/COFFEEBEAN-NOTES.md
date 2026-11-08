@@ -29,7 +29,7 @@ Git repo: https://github.com/Nicholasrooney/thecofeebean.ie (branch `main`).
    `$site['show_prices'] = true`. One switch covers menu, home page and Google.
 2. **Allergens** — the boards print allergen numbers, too small to read in the
    photos. Get the list and fill in `'allergens'`. Never guess.
-3. **Click and collect** — live at `order.php` ("Order" in the top bar).
+3. **Click and collect** — built but switched OFF (`$ordering['enabled']`). At `order.php` ("Order" in the top bar).
    Pay on collection. Orders go to `data/orders.csv` and are emailed to
    `$ordering['notify_email']` (Nicholas for now — add the café's address),
    with a receipt to the customer. Options per dish (size, milk, eggs, extras)
@@ -40,7 +40,7 @@ Git repo: https://github.com/Nicholasrooney/thecofeebean.ie (branch `main`).
 4. **Domain / mail** — point thecoffeebean.ie at Hostinger, turn on SSL.
    `$mail['from']` must be on the live domain. Bookings email Nicholas until
    the café gives an address.
-5. **Bookings** — works now in "request" mode (emails). For the full diary,
+5. **Bookings** — switched OFF (`$booking['enabled']`). When on, works in "request" mode (emails). For the full diary,
    create the MySQL DB in hPanel and run `/setup.php` (docs/database-setup.md).
 6. **Instagram / email / GA4** — all blank and hidden until filled in.
 7. Optional: paste the exact map pin into `$site['coords']`.

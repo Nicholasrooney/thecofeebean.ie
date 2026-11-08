@@ -60,7 +60,7 @@ function seo_restaurant_node(): array
                         . 'signature sandwiches and wraps, fresh pastries, and organic Fairtrade coffee. '
                         . 'Gluten free, vegetarian and vegan friendly.',
         'hasMenu'      => seo_url('menu.php'),
-        'acceptsReservations' => seo_url('booking.php'),
+        'acceptsReservations' => !empty($booking['enabled']) ? seo_url('booking.php') : false,
     ];
 
     if (!empty($site['address'])) {

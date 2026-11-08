@@ -44,6 +44,11 @@ $site = [
 
 // Booking form options
 $booking = [
+    // Table bookings are OFF for now (Nov 2026): no "Book a table" tab or
+    // buttons, booking.php sends people to the home page, and Google is told
+    // the café takes no reservations. Set to true to bring it all back.
+    'enabled' => false,
+
     /*
      * Opening hours, per day. [open, close] in 24-hour time, or null if the
      * café is closed that day. This is the single source of truth — it drives
@@ -281,7 +286,7 @@ $catering = [
  * point 'url' at it; the nav, home page and menu buttons follow.
  */
 $ordering = [
-    'enabled'   => true,            // show "Order" in the menu and the order buttons
+    'enabled'   => false,           // OFF for now (Nov 2026). true = "Order" tab and order buttons come back
     'accepting' => true,            // false = page stays up but checkout is closed
     'label'     => 'Order',                 // the tab in the top bar
     'button'    => 'Order for collection',  // the buttons on the page

@@ -1,4 +1,9 @@
 <?php
+require_once __DIR__ . '/includes/config.php';
+if (empty($booking['enabled'])) {
+    header('Location: /', true, 302);
+    exit;
+}
 /*
  * Which time slots still have room on a given date.
  *

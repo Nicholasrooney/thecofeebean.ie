@@ -1,4 +1,9 @@
 <?php
+require_once __DIR__ . '/includes/config.php';
+if (empty($booking['enabled'])) {
+    header('Location: /', true, 302);
+    exit;
+}
 require __DIR__ . '/includes/booking-handler.php';
 
 $pageTitle       = 'Book a Table | The Coffee Bean, Mary Street, Dublin 1';

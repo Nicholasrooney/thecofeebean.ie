@@ -88,11 +88,13 @@ $hasAllergens = (bool) array_filter(array_merge(...array_column($menu, 'items'))
     <?php endif; ?>
 </div>
 
+<?php if (!empty($booking['enabled'])): ?>
 <section class="section cta-band">
     <div class="container cta-inner">
         <h2>Saving you a seat?</h2>
         <a class="btn btn-light" href="booking.php">Book a table</a>
     </div>
 </section>
+<?php endif; ?>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>

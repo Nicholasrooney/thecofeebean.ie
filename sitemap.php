@@ -13,9 +13,11 @@ header('Content-Type: application/xml; charset=utf-8');
 $pages = [
     'index.php'   => ['weekly',  '1.0'],
     'menu.php'    => ['weekly',  '0.9'],
-    'booking.php' => ['monthly', '0.9'],
     'gallery.php' => ['monthly', '0.7'],
 ];
+if (!empty($booking['enabled'])) {
+    $pages['booking.php'] = ['monthly', '0.9'];
+}
 if (!empty($ordering['enabled']) && ($ordering['url'] ?? '') === 'order.php') {
     $pages['order.php'] = ['weekly', '0.9'];
 }

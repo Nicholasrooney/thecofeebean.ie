@@ -27,6 +27,9 @@ if (empty($site['show_video_home'])) {
 if (empty($catering['enabled'])) {
     unset($nav['catering']);
 }
+if (empty($booking['enabled'])) {
+    unset($nav['booking']);
+}
 if (empty($ordering['enabled']) || empty($ordering['url'])) {
     unset($nav['order']);
 }

@@ -24,8 +24,8 @@ $pageSchema = [
             'Monday to Friday 7:45 to 17:00, Saturday 8:30 to 17:00 and Sunday 9:00 to 17:00.',
         'When is breakfast served?' =>
             'Breakfast and brunch run from opening until 15:30. Sandwiches and wraps are served until 16:00.',
-        'Do you take bookings?' =>
-            'Yes. Request a table through the website or call 01 561 3011. Walk-ins are welcome too.',
+        'Do I need to book?' =>
+            'No, just walk in. For a bigger group, call us on 01 561 3011.',
         'Do you have vegan and gluten free options?' =>
             'Yes. The menu is gluten free, vegetarian and vegan friendly, with dishes like the Simply Vegan focaccia, the Veggie breakfast and gluten free pancakes. Ask staff about allergens.',
         'Can you sit outside?' =>
@@ -91,8 +91,10 @@ $hasOrdering = !empty($ordering['enabled']) && !empty($ordering['url']);
             <a class="btn btn-accent" href="menu.php">See the menu</a>
             <?php if ($hasOrdering): ?>
                 <a class="btn btn-outline-light" href="<?= e($ordering['url']) ?>" data-track="order_click"><?= e($ordering['button']) ?></a>
-            <?php else: ?>
+            <?php elseif (!empty($booking['enabled'])): ?>
                 <a class="btn btn-outline-light" href="booking.php">Book a table</a>
+            <?php else: ?>
+                <a class="btn btn-outline-light" href="#map">Find us</a>
             <?php endif; ?>
         </div>
         <?php if (!empty($site['rating'])): ?>
