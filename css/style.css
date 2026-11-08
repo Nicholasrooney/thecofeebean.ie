@@ -1671,3 +1671,6 @@ a:hover { color: var(--signage-deep); }
 .order-section.is-unavailable .order-item:hover { box-shadow: none; border-color: #e3e5e8; }
 .order-section.is-unavailable .order-item-add { background: var(--muted); box-shadow: none; }
 .order-section.is-unavailable .order-until { color: var(--signage); font-weight: 600; }
+/* The map placeholder hides once the real map loads. Without this, its
+   display:flex beat the hidden attribute and pushed the map out of view. */
+.map-frame [hidden] { display: none !important; }
