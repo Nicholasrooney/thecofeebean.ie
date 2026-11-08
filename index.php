@@ -11,7 +11,7 @@ $pageTitle       = $pageTitle ?? 'The Coffee Bean | Breakfast, Brunch & Coffee o
 $pageDescription = 'The Coffee Bean, 64 Mary Street, Dublin 1. Breakfast and brunch seven days a week, signature sandwiches and wraps, fresh pastries and organic Fairtrade coffee. Gluten free, vegetarian and vegan friendly.';
 $pageKeywords    = 'breakfast Dublin 1, brunch Mary Street Dublin, café Dublin city centre, coffee near Henry Street, vegan breakfast Dublin, The Coffee Bean Dublin';
 $activePage      = $activePage ?? 'home';
-$pagePreload     = $heroStyle === 'video' ? ['images/kitchen-poster.webp'] : ['images/storefront-terrace.webp'];
+$pagePreload     = $heroStyle === 'video' ? ['images/kitchen-poster-hq.webp'] : ['images/storefront-terrace.webp'];
 
 // Every answer here is true of the café: it comes from the Google listing or
 // the café's own menu board. A wrong answer in a rich result is worse than none.
@@ -64,9 +64,14 @@ $hasOrdering = !empty($ordering['enabled']) && !empty($ordering['url']);
 <?php if ($heroStyle === 'video'): ?>
 <section class="hero hero-video-bg">
     <div class="hero-media">
+        <?php /* Desktop only: a soft, blurred copy fills the width behind the
+                 text, so the sharp film never has to be stretched. Hidden on
+                 phones, where it is never loaded. */ ?>
+        <video class="hero-video-blur js-lazy-video" muted playsinline loop preload="none"
+               data-src="video/kitchen-hq.mp4" data-autoplay="eager" aria-hidden="true" tabindex="-1"></video>
         <video class="hero-video js-lazy-video" muted playsinline loop preload="none"
-               poster="images/kitchen-poster.webp" data-src="video/kitchen.mp4" data-autoplay="eager"
-               width="540" height="960" aria-label="Short film: avocado toast with poached eggs being made in the kitchen at The Coffee Bean"></video>
+               poster="images/kitchen-poster-hq.webp" data-src="video/kitchen-hq.mp4" data-autoplay="eager"
+               width="576" height="1024" aria-label="Short film: avocado toast with poached eggs being made in the kitchen at The Coffee Bean"></video>
         <button type="button" class="video-toggle" aria-pressed="false" hidden>
             <span class="video-toggle-pause">Pause video</span>
             <span class="video-toggle-play">Play video</span>

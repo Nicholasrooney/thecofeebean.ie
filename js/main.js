@@ -151,7 +151,7 @@ function cookieChoice(set) {
   // Pause / play button, so a moving image can always be stopped.
   videos.forEach(function (v) {
     var toggle = v.parentNode.querySelector('.video-toggle');
-    if (!toggle) return;
+    if (!toggle || v.classList.contains('hero-video-blur')) return;
     toggle.addEventListener('click', function () {
       var paused = toggle.getAttribute('aria-pressed') === 'true';
       toggle.setAttribute('aria-pressed', String(!paused));
@@ -186,6 +186,18 @@ function cookieChoice(set) {
   }, { rootMargin: '200px 0px' });
 
   videos.forEach(function (v) { io.observe(v); });
+
+  // The blurred background copy follows the main film: same play/pause, and
+  // nudged back in step if it drifts.
+  var blur = document.querySelector('.hero-video-blur');
+  var main = blur && blur.parentNode.querySelector('.hero-video');
+  if (blur && main) {
+    main.addEventListener('play', function () { var p = blur.play(); if (p && p.catch) p.catch(function () {}); });
+    main.addEventListener('pause', function () { blur.pause(); });
+    main.addEventListener('timeupdate', function () {
+      if (blur.readyState > 1 && Math.abs(blur.currentTime - main.currentTime) > 0.3) blur.currentTime = main.currentTime;
+    });
+  }
 })();
 
 // Cookie banner. Shown until somebody chooses, and reopened by the footer's
