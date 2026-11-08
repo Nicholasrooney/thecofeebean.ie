@@ -1294,13 +1294,11 @@ a:hover { color: var(--signage-deep); }
 /* ---------- Home: video version (home-video.php) ----------
    Phone: the film fills the screen at close to its real size, with a dark
    fade only behind the text at the bottom.
-   Desktop: the film is portrait and 576px wide, so stretching it across the
-   screen makes it soft. Instead a blurred copy fills the width (blur hides
-   the low resolution) and the sharp film sits on the right at about its
-   real size. No dark wash over the sharp film. */
+   Desktop: the film is portrait and 576px wide, so it sits on the right at
+   about its real size, in a phone-shaped frame, on the dark shopfront colour.
+   No dark wash over it. */
 .hero-video-bg { position: relative; display: block; overflow: hidden; min-height: min(88svh, 820px); background: var(--fascia-deep); }
 .hero-video-bg .hero-media { position: absolute; inset: 0; background: none; }
-.hero-video-bg .hero-video-blur { display: none; }
 .hero-video-bg .hero-video { background: var(--fascia-deep) url("../images/kitchen-poster-hq.webp") center / cover no-repeat; }
 .hero-video-bg .hero-media::after {
   content: "";
@@ -1321,15 +1319,10 @@ a:hover { color: var(--signage-deep); }
 .hero-video-bg .video-toggle { top: 0.85rem; bottom: auto; }
 @media (min-width: 900px) {
   .hero-video-bg .hero-media::after { display: none; }
-  .hero-video-bg .hero-video-blur {
-    display: block;
-    position: absolute;
-    inset: -60px;
-    width: calc(100% + 120px);
-    height: calc(100% + 120px);
-    object-fit: cover;
-    filter: blur(36px) brightness(0.5) saturate(1.15);
-    background: url("../images/kitchen-poster-hq.webp") center / cover no-repeat;
+  .hero-video-bg {
+    background:
+      radial-gradient(ellipse at 78% 50%, rgba(163, 37, 58, 0.35), transparent 60%),
+      var(--fascia);
   }
   .hero-video-bg .hero-video {
     position: absolute;

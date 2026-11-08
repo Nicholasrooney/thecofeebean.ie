@@ -64,11 +64,6 @@ $hasOrdering = !empty($ordering['enabled']) && !empty($ordering['url']);
 <?php if ($heroStyle === 'video'): ?>
 <section class="hero hero-video-bg">
     <div class="hero-media">
-        <?php /* Desktop only: a soft, blurred copy fills the width behind the
-                 text, so the sharp film never has to be stretched. Hidden on
-                 phones, where it is never loaded. */ ?>
-        <video class="hero-video-blur js-lazy-video" muted playsinline loop preload="none"
-               data-src="video/kitchen-hq.mp4" data-autoplay="eager" aria-hidden="true" tabindex="-1"></video>
         <video class="hero-video js-lazy-video" muted playsinline loop preload="none"
                poster="images/kitchen-poster-hq.webp" data-src="video/kitchen-hq.mp4" data-autoplay="eager"
                width="576" height="1024" aria-label="Short film: avocado toast with poached eggs being made in the kitchen at The Coffee Bean"></video>
