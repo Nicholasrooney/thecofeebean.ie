@@ -24,7 +24,7 @@ $hasAllergens = (bool) array_filter(array_merge(...array_column($menu, 'items'))
             <p>Fresh ingredients from local suppliers, free range eggs and organic bread. We are gluten free, vegetarian and vegan friendly, so ask a member of staff about allergens or any dietary needs.</p>
         <?php endif; ?>
         <?php if (!empty($ordering['enabled']) && !empty($ordering['url'])): ?>
-            <p><a class="btn btn-accent" href="<?= e($ordering['url']) ?>" data-track="order_click"><?= e($ordering['label']) ?></a></p>
+            <p><a class="btn btn-accent" href="<?= e($ordering['url']) ?>" data-track="order_click"><?= e($ordering['button']) ?></a></p>
         <?php endif; ?>
         <nav class="menu-jump" aria-label="Menu sections">
             <?php foreach ($menu as $section): ?>

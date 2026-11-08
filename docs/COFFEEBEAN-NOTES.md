@@ -29,8 +29,14 @@ Git repo: https://github.com/Nicholasrooney/thecofeebean.ie (branch `main`).
    `$site['show_prices'] = true`. One switch covers menu, home page and Google.
 2. **Allergens** — the boards print allergen numbers, too small to read in the
    photos. Get the list and fill in `'allergens'`. Never guess.
-3. **Order for collection** — `$ordering` in config. Link-out now (set `url`
-   and `enabled`), or build a basket later on top of `menu-data.php`.
+3. **Click and collect** — live at `order.php` ("Order" in the top bar).
+   Pay on collection. Orders go to `data/orders.csv` and are emailed to
+   `$ordering['notify_email']` (Nicholas for now — add the café's address),
+   with a receipt to the customer. Options per dish (size, milk, eggs, extras)
+   are in `order_options_for()` in `includes/order.php`; the server re-prices
+   every order from the menu, so the browser can't change a price. Switch
+   checkout off with `$ordering['accepting'] = false`. Online card payment
+   (e.g. SumUp) can be added later at the "Place order" step.
 4. **Domain / mail** — point thecoffeebean.ie at Hostinger, turn on SSL.
    `$mail['from']` must be on the live domain. Bookings email Nicholas until
    the café gives an address.
@@ -65,7 +71,7 @@ through git: `includes/secrets/db.php` is uploaded by hand in File Manager.
 
 ## Tests
 
-    php db/test.php && php db/test-seo.php && php db/test-setup.php && php db/test-picker.php
+    php db/test.php && php db/test-seo.php && php db/test-setup.php && php db/test-picker.php && php db/test-order.php
 
 Source photos, videos and screenshots are in `Extras/` (gitignored).
 `event-catering.php` is still the Cilantro catering page underneath; it answers

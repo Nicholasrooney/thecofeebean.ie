@@ -267,24 +267,36 @@ $catering = [
 ];
 
 /*
- * Order for collection.
+ * Click and collect (order.php).
  *
- * Off for now. Two ways to switch it on, neither needs a template change:
+ * Customers build a basket from includes/menu-data.php, pick a collection
+ * time and pay when they collect. Every order is saved to data/orders.csv and
+ * emailed to notify_email (and a receipt to the customer).
  *
- *  1. Link out: set 'url' to the café's ordering page (Flipdish, Deliveroo
- *     Pickup, SumUp online store, etc.) and 'enabled' to true. An "Order for
- *     collection" button then appears in the header, the home page and the menu.
+ * The order page always shows prices, because it cannot work without them.
+ * While $site['show_prices'] is false it carries a "preview" notice, so
+ * nobody takes an unconfirmed price as final.
  *
- *  2. Build it in: later, a basket on menu.php can reuse includes/menu-data.php
- *     (every dish already has an id-able name and a price) and post to an
- *     order handler shaped like includes/booking-handler.php. Leave 'url' as
- *     'order.php' when that exists.
+ * To use an outside ordering system instead (Flipdish, SumUp online store),
+ * point 'url' at it; the nav, home page and menu buttons follow.
  */
 $ordering = [
-    'enabled' => false,
-    'label'   => 'Order for collection',
-    'url'     => '',
-    'note'    => 'Order ahead and collect from 64 Mary Street.',
+    'enabled'   => true,            // show "Order" in the menu and the order buttons
+    'accepting' => true,            // false = page stays up but checkout is closed
+    'label'     => 'Order',                 // the tab in the top bar
+    'button'    => 'Order for collection',  // the buttons on the page
+    'url'       => 'order.php',
+    'note'      => 'Order ahead and collect from 64 Mary Street.',
+
+    'prep_minutes'            => 20,  // earliest collection is now + this
+    'slot_minutes'            => 15,  // collection times every 15 minutes
+    'last_order_before_close' => 30,  // last collection 30 min before closing
+    'max_items'               => 30,
+
+    'notify_email' => [
+        'nicholas.rooney2010@gmail.com',
+    ],
+    'csv_file' => __DIR__ . '/../data/orders.csv',
 ];
 
 /*

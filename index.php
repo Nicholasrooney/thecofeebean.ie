@@ -90,7 +90,7 @@ $hasOrdering = !empty($ordering['enabled']) && !empty($ordering['url']);
         <div class="hero-actions">
             <a class="btn btn-accent" href="menu.php">See the menu</a>
             <?php if ($hasOrdering): ?>
-                <a class="btn btn-outline-light" href="<?= e($ordering['url']) ?>" data-track="order_click"><?= e($ordering['label']) ?></a>
+                <a class="btn btn-outline-light" href="<?= e($ordering['url']) ?>" data-track="order_click"><?= e($ordering['button']) ?></a>
             <?php else: ?>
                 <a class="btn btn-outline-light" href="booking.php">Book a table</a>
             <?php endif; ?>
@@ -203,7 +203,7 @@ $hasOrdering = !empty($ordering['enabled']) && !empty($ordering['url']);
 <section class="section cta-band">
     <div class="container cta-inner">
         <h2><?= e($ordering['note']) ?></h2>
-        <a class="btn btn-light" href="<?= e($ordering['url']) ?>" data-track="order_click"><?= e($ordering['label']) ?></a>
+        <a class="btn btn-light" href="<?= e($ordering['url']) ?>" data-track="order_click"><?= e($ordering['button']) ?></a>
     </div>
 </section>
 <?php endif; ?>

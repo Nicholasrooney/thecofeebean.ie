@@ -40,6 +40,16 @@ $updated = 'November 2026';
     <p>Staff can add their own notes to your record — for example an allergy you
        mentioned, or that you prefer to sit outside. You can ask to see these.</p>
 
+    <h2>When you order for collection</h2>
+    <p>We ask for your name, phone number and email address, plus your order,
+       collection time and any note you add. We use them to make your order,
+       to send you a receipt, and to ring you if there is a problem with it.
+       Our lawful basis is that we need them to fulfil the order you placed.
+       Order records are kept for <?= (int) ($booking['retention_months'] ?? 24) ?> months for our accounts, then deleted.</p>
+    <p>Your basket is kept in your own browser (local storage) until you place
+       the order, so it is not lost if you leave the page. It is not a cookie and
+       is never sent to anyone else.</p>
+
     <h2>When you ask about catering</h2>
     <p>If you use our catering page, we keep what you send us: your phone number
        or email, where the event is, and — if you use the full form — your name,

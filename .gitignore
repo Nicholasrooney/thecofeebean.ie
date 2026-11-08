@@ -1,5 +1,6 @@
 # Customer booking data — never commit, never overwrite on deploy
 data/bookings.csv
+data/orders.csv
 
 # Source archives / backups
 *.zip

@@ -16,6 +16,9 @@ $pages = [
     'booking.php' => ['monthly', '0.9'],
     'gallery.php' => ['monthly', '0.7'],
 ];
+if (!empty($ordering['enabled']) && ($ordering['url'] ?? '') === 'order.php') {
+    $pages['order.php'] = ['weekly', '0.9'];
+}
 
 // Only list catering while it is switched on.
 if (!empty($catering['enabled'])) {

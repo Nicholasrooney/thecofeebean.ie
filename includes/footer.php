@@ -48,5 +48,8 @@ render_cookie_banner();
 ?>
 
 <script src="<?= e(asset('js/main.js')) ?>" defer></script>
+<?php foreach (($pageScripts ?? []) as $script): ?>
+<script src="<?= e(asset($script)) ?>" defer></script>
+<?php endforeach; ?>
 </body>
 </html>
