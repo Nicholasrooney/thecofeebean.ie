@@ -79,10 +79,18 @@
 
 // Cookie choice. Stored in localStorage rather than a cookie, so saying no to
 // cookies doesn't ironically set one. Returns 'all', 'essential' or null.
+// The choice is remembered for six months, then we ask again, as the Data
+// Protection Commission recommends. Stored as {"c":"all","t":<ms>}.
+var COOKIE_CHOICE_MAX_AGE = 182 * 24 * 60 * 60 * 1000;
 function cookieChoice(set) {
   try {
-    if (set) { localStorage.setItem('coffeebean-cookies', set); return set; }
-    return localStorage.getItem('coffeebean-cookies');
+    if (set) {
+      localStorage.setItem('coffeebean-cookies', JSON.stringify({ c: set, t: Date.now() }));
+      return set;
+    }
+    var saved = JSON.parse(localStorage.getItem('coffeebean-cookies') || 'null');
+    if (!saved || !saved.c || !saved.t || Date.now() - saved.t > COOKIE_CHOICE_MAX_AGE) return null;
+    return saved.c;
   } catch (e) {
     // Private browsing, or storage blocked. Treat as "not decided" and never
     // assume consent.
@@ -92,7 +100,7 @@ function cookieChoice(set) {
 
 // Map. Consent first: nothing is fetched from Google until the visitor has
 // chosen "Accept all" in the cookie notice, or taps the placeholder to load
-// the map just this once. Choosing "Essential only" later takes it back out.
+// the map just this once. Choosing "Reject non-essential" later takes it back out.
 (function () {
   var frame = document.querySelector('.map-frame');
   if (!frame) return;

@@ -57,11 +57,30 @@ Git repo: https://github.com/Nicholasrooney/thecofeebean.ie (branch `main`).
 - To add a photo: `python` + Pillow, or squoosh.app — export WebP at 1200px
   (quality ~78) and 640px, name them `x.webp` / `x-sm.webp`, add to gallery.php.
 
-## GDPR / cookies
+## GDPR / cookies (checked 8 Nov 2026 against DPC guidance)
 
-Same consent banner as the other sites. Analytics is opt-in. The Google map no
-longer loads until the visitor accepts or taps "Show the map" (the older sites
-load it first and remove it on "Essential only").
+- Nothing goes to Google before consent: fonts are self-hosted (fonts/), the map
+  and Google Analytics load only after "Accept all" (or a tap on the map).
+- "Reject non-essential" and "Accept all" look identical (DPC: equal prominence).
+- The choice is remembered for 6 months, then the banner asks again.
+- "Cookie settings" in the footer reopens it; rejecting deletes the _ga cookies.
+- privacy.php only describes what is switched on (bookings/ordering/GA sections
+  appear by themselves when those are enabled).
+
+### Adding Google Analytics
+1. Create a GA4 property + web stream for thecoffeebean.ie, copy the G-XXXX ID.
+2. Paste it into `$analytics['ga4_id']` in includes/config.php. That is all:
+   the banner and privacy notice update themselves.
+3. In GA4 Admin: Data collection → **Google signals OFF**; Data retention →
+   **2 months**; Account settings → accept the **Data Processing Terms**.
+   No Google Ads link (the consent setup keeps ad storage denied).
+
+### Adding Google Search Console
+No cookies, nothing to consent to. Add a *Domain* property for
+thecoffeebean.ie and verify with the DNS TXT record in Hostinger (hPanel →
+Domains → DNS). Or the HTML-file method: drop google*.html in the site root
+(.gitignore already lets it through). Then submit
+https://thecoffeebean.ie/sitemap.xml.
 
 ## Deploy
 

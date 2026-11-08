@@ -19,14 +19,22 @@ function render_cookie_banner(): void
     <div class="cookie" id="cookie-banner" hidden>
         <div class="cookie-inner">
             <p class="cookie-text">
-                We use a cookie to keep the booking form working. With your OK we also use
-                Google Analytics to see which pages people use, so we can improve the site.
-                No ads. The map on our home page comes from Google and only loads if you accept
-                (or tap it), because Google may set their own cookies.
-                <a href="privacy.php">Privacy notice</a>.
+                <?php if (!empty($GLOBALS['booking']['enabled']) || !empty($GLOBALS['ordering']['enabled'])): ?>
+                    We use one cookie to keep our forms working.
+                <?php endif; ?>
+                <?php if (!empty($GLOBALS['analytics']['ga4_id'])): ?>
+                    With your OK we use Google Analytics to see which pages people use, so we can
+                    improve the site, and show a Google map. Both may set cookies. No ads.
+                <?php else: ?>
+                    With your OK we show a map from Google, which may set its own cookies. No ads, no tracking.
+                <?php endif; ?>
+                You can change your mind any time with "Cookie settings" at the bottom of the page.
+                <a href="privacy.php#cookies">Privacy notice</a>.
             </p>
+            <?php /* Equal prominence: the DPC requires "reject" to be as easy and as
+                     visible as "accept", so both buttons are styled the same. */ ?>
             <div class="cookie-do">
-                <button type="button" class="btn btn-outline-light" data-cookie="essential">Essential only</button>
+                <button type="button" class="btn btn-light" data-cookie="essential">Reject non-essential</button>
                 <button type="button" class="btn btn-light" data-cookie="all">Accept all</button>
             </div>
         </div>

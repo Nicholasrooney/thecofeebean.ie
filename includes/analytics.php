@@ -36,8 +36,13 @@ function render_analytics_head(): void
       function gtag() { window.dataLayer.push(arguments); }
       window.gtag = gtag;
 
+      // Same store and six-month expiry as cookieChoice() in js/main.js.
       function choice() {
-        try { return localStorage.getItem('coffeebean-cookies'); } catch (e) { return null; }
+        try {
+          var s = JSON.parse(localStorage.getItem('coffeebean-cookies') || 'null');
+          if (!s || !s.c || !s.t || Date.now() - s.t > 182 * 24 * 60 * 60 * 1000) return null;
+          return s.c;
+        } catch (e) { return null; }
       }
 
       function load() {
@@ -66,6 +71,7 @@ function render_analytics_head(): void
       // clear the cookies Google already set.
       function unload() {
         window['ga-disable-' + ID] = true;
+        gtag('consent', 'update', { analytics_storage: 'denied' });
         loaded = false;
         var host = location.hostname;
         document.cookie.split(';').forEach(function (c) {

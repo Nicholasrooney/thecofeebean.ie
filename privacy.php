@@ -1,6 +1,6 @@
 <?php
 $pageTitle       = 'Privacy notice | The Coffee Bean';
-$pageDescription = 'How The Coffee Bean uses the details you give us when you book a table, how long we keep them, and how to ask for a copy or have them deleted.';
+$pageDescription = 'How The Coffee Bean uses cookies and any details you give us, how long we keep them, and how to ask for a copy or have them deleted.';
 $pageRobots      = 'noindex, follow';
 $activePage      = 'privacy';
 
@@ -9,7 +9,7 @@ $pageSchema = [seo_breadcrumbs(['Privacy notice' => 'privacy.php'])];
 require __DIR__ . '/includes/header.php';
 
 $contact = $site['email'] ?: ($site['phone'] ?: 'us in the café');
-$updated = 'November 2026';
+$updated = '8 November 2026';
 ?>
 
 <section class="page-intro">
@@ -26,81 +26,91 @@ $updated = 'November 2026';
         <?= e($site['name']) ?><?= $site['address'] ? ', ' . e($site['address']) : '' ?><?= !empty($site['eircode']) ? ', ' . e($site['eircode']) : '' ?>.
         We are the data controller for the information described here.
         <?php if ($site['email']): ?>
-            You can reach us at <a href="mailto:<?= e($site['email']) ?>"><?= e($site['email']) ?></a>.
+            You can reach us at <a href="mailto:<?= e($site['email']) ?>"><?= e($site['email']) ?></a><?= $site['phone'] ? ' or on ' . e($site['phone']) : '' ?>.
+        <?php elseif ($site['phone']): ?>
+            You can reach us on <?= e($site['phone']) ?>, or ask in the café.
         <?php endif; ?>
     </p>
 
+    <?php if (empty($booking['enabled']) && empty($ordering['enabled']) && empty($catering['enabled'])): ?>
+        <p>This website has no forms and no accounts. We do not ask you for any
+           personal details here. The only information involved is what the
+           cookies and services below collect, and only if you allow them.</p>
+    <?php endif; ?>
+
+    <?php if (!empty($booking['enabled'])): ?>
     <h2>When you book a table</h2>
     <p>We ask for your name, phone number and email address, plus the date, time,
        number of guests, any seating preference and anything you tell us in the
-       notes box.</p>
-    <p>We use it to hold your table, to contact you if something changes, and to
-       keep a record of the booking. Our lawful basis is that we need it to
-       provide the booking you asked for.</p>
-    <p>Staff can add their own notes to your record — for example an allergy you
-       mentioned, or that you prefer to sit outside. You can ask to see these.</p>
+       notes box. We use it to hold your table, to contact you if something
+       changes, and to keep a record of the booking. Our lawful basis is that we
+       need it to provide the booking you asked for.</p>
+    <p>Booking records are kept for <?= (int) ($booking['retention_months'] ?? 24) ?> months after your
+       most recent visit, then your name and contact details are permanently
+       removed. An anonymous count of covers is kept for staff planning.</p>
+    <?php endif; ?>
 
+    <?php if (!empty($ordering['enabled'])): ?>
     <h2>When you order for collection</h2>
     <p>We ask for your name, phone number and email address, plus your order,
        collection time and any note you add. We use them to make your order,
-       to send you a receipt, and to ring you if there is a problem with it.
-       Our lawful basis is that we need them to fulfil the order you placed.
-       Order records are kept for <?= (int) ($booking['retention_months'] ?? 24) ?> months for our accounts, then deleted.</p>
+       send you a receipt, and ring you if there is a problem. Our lawful basis
+       is that we need them to fulfil the order you placed. Order records are
+       kept for <?= (int) ($booking['retention_months'] ?? 24) ?> months for our accounts, then deleted.</p>
     <p>Your basket is kept in your own browser (local storage) until you place
-       the order, so it is not lost if you leave the page. It is not a cookie and
-       is never sent to anyone else.</p>
+       the order, so it is not lost if you leave the page. It is never sent to
+       anyone else.</p>
+    <?php endif; ?>
 
-    <h2>When you ask about catering</h2>
-    <p>If you use our catering page, we keep what you send us: your phone number
-       or email, where the event is, and — if you use the full form — your name,
-       the occasion, date, numbers, package, whether you want pickup or delivery,
-       a delivery address and any notes.</p>
-    <p>We use it only to answer your enquiry and, if you go ahead, to arrange the
-       catering. Enquiries that go quiet are deleted <?= (int) ($booking['retention_months'] ?? 24) ?> months
-       after they were last updated.</p>
-
+    <?php if (!empty($booking['enabled']) || !empty($ordering['enabled'])): ?>
     <h2>Marketing emails</h2>
-    <p>We only email you about offers and events if you ticked the box asking us
-       to. That is separate from booking a table, and your booking is unaffected
-       if you leave it unticked. You can tell us to stop at any time and we will.</p>
+    <p>We only email you about offers if you ticked the box asking us to. You can
+       tell us to stop at any time and we will. We keep your email address for
+       this until you do.</p>
+    <?php endif; ?>
 
-    <h2>How long we keep it</h2>
-    <p>Booking records are kept for <?= (int) ($booking['retention_months'] ?? 24) ?> months after your
-       most recent visit. After that your name and phone number are permanently
-       removed from our system.</p>
-    <p>The booking itself stays on as an anonymous record — just a date and a
-       number of covers — because we use it to plan staffing. It can no longer
-       be connected to you.</p>
-    <p>If you asked for marketing emails, we keep your email address until you
-       tell us to stop, because your consent is a separate reason for holding it.</p>
+    <h2>Who else handles data for us</h2>
+    <ul>
+        <li><strong>Hostinger</strong> hosts this website, on servers in the EU.</li>
+        <?php if (!empty($analytics['ga4_id'])): ?>
+            <li><strong>Google Analytics</strong> (Google Ireland Ltd), only if you choose "Accept all". See Cookies below.</li>
+        <?php endif; ?>
+        <li><strong>Google Maps</strong> (Google Ireland Ltd), only if you accept or tap "Show the map".</li>
+    </ul>
+    <p>Google may process data in the United States. Those transfers are covered by
+       the EU-US Data Privacy Framework, under which Google is certified, and by
+       Google's standard contractual clauses. We do not sell your information or
+       share it for anyone else's marketing.</p>
 
-    <h2>Who else sees it</h2>
-    <p>Your booking details are visible to café staff through our booking system.
-       We do not sell your information and we do not share it for anyone else's
-       marketing.</p>
-    <p>Our website is hosted by Hostinger, who store the data on our behalf within
-       the EU. If we have connected our booking system to Google Calendar, your
-       name, party size and contact details are also written to a private calendar
-       owned by the café so staff can see the day's bookings.</p>
-
-    <h2>Cookies</h2>
-    <p>This site sets one cookie of its own, which keeps your booking form secure
-       while you fill it in. It is deleted when you close your browser and it does
-       not track you.</p>
-    <p><strong>Google Analytics.</strong> If you choose "Accept all" in the cookie
-       notice, we use Google Analytics to understand how people use this site —
-       which pages are visited, and whether people tap things like the menu,
-       directions or the booking form. It sets cookies whose names start with
-       <code>_ga</code>. We do not send Google your name, phone number, email or
-       anything you type into a form, and we do not use it for advertising.
-       Nothing is sent to Google unless you accept.</p>
-    <p><strong>Google Maps.</strong> Our home page can show a map from Google,
-       and Google may set their own cookies when it loads. So it only loads if
-       you choose "Accept all", or tap the map placeholder to load it that once.
-       Until then nothing is requested from Google.</p>
-    <p>You can change your mind at any time using <strong>Cookie settings</strong>
-       at the bottom of every page. Choosing "Essential only" stops analytics and
-       deletes its cookies.</p>
+    <h2 id="cookies">Cookies</h2>
+    <?php if (!empty($booking['enabled']) || !empty($ordering['enabled'])): ?>
+        <p><strong>Strictly necessary.</strong> One cookie of our own keeps our forms
+           secure while you fill them in. It is deleted when you close your browser
+           and does not track you.</p>
+    <?php else: ?>
+        <p><strong>Our own.</strong> This site sets no cookies of its own. Your cookie
+           choice is remembered in your browser's local storage (not a cookie) for
+           six months, then we ask again.</p>
+    <?php endif; ?>
+    <?php if (!empty($analytics['ga4_id'])): ?>
+        <p><strong>Google Analytics</strong> (only if you choose "Accept all"). Helps us
+           see which pages people use, for example whether people tap the menu or
+           directions. It sets cookies whose names start with <code>_ga</code>, which
+           last up to 2 years. We do not send Google your name, phone number, email or
+           anything you type, we have advertising features switched off, and Google
+           does not store your full IP address. Nothing is sent to Google unless you
+           accept.</p>
+    <?php else: ?>
+        <p><strong>Analytics.</strong> We do not use analytics at the moment. If we add
+           Google Analytics it will only run if you choose "Accept all", and this notice
+           will be updated.</p>
+    <?php endif; ?>
+    <p><strong>Google Maps.</strong> The map on our home page comes from Google, who may
+       set their own cookies when it loads. It only loads if you choose "Accept all",
+       or tap the map to load it that once. Until then nothing is requested from Google.</p>
+    <p>You can change your mind at any time with <strong>Cookie settings</strong> at the
+       bottom of every page. Choosing "Reject non-essential" stops analytics, deletes its
+       cookies and hides the map.</p>
 
     <h2>Your rights</h2>
     <p>Under GDPR you can ask us to:</p>
@@ -111,9 +121,7 @@ $updated = 'November 2026';
         <li>stop using them for marketing</li>
         <li>restrict or object to how we use them</li>
     </ul>
-    <p>Just ask <?= $site['email'] ? '' : '' ?><?php if ($site['email']): ?><a href="mailto:<?= e($site['email']) ?>"><?= e($site['email']) ?></a><?php else: ?>a member of staff<?php endif; ?>
-       and we will sort it out. There is no charge, and we will come back to you
-       within one month.</p>
+    <p>Contact us as above. We will reply within one month.</p>
 
     <h2>Complaints</h2>
     <p>If you are unhappy with how we have handled your information, please tell

@@ -6,6 +6,10 @@
     RewriteRule ^sitemap\.xml$ sitemap.php [L]
 </IfModule>
 
+<IfModule mod_mime.c>
+    AddType font/woff2 .woff2
+</IfModule>
+
 # index.php is the front page.
 DirectoryIndex index.php index.html
 
@@ -13,9 +17,9 @@ DirectoryIndex index.php index.html
 Options -Indexes
 
 <IfModule mod_headers.c>
-    # Basic hardening. No CSP here: the site loads Google Fonts and, once the
-    # visitor allows it, a Google Maps iframe, and a policy tight enough to be
-    # worth having would break both.
+    # Basic hardening. No CSP here: once the visitor allows it the site loads
+    # Google Analytics and a Google Maps iframe, and a policy tight enough to be
+    # worth having would need care to keep both working.
     Header always set X-Content-Type-Options "nosniff"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Header always set X-Frame-Options "SAMEORIGIN"
@@ -27,6 +31,9 @@ Options -Indexes
     ExpiresByType image/jpeg "access plus 6 months"
     ExpiresByType image/png  "access plus 6 months"
     ExpiresByType image/webp "access plus 6 months"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType video/mp4 "access plus 6 months"
+    ExpiresByType image/svg+xml "access plus 6 months"
     ExpiresByType text/css   "access plus 1 week"
     ExpiresByType text/javascript "access plus 1 week"
 </IfModule>
